@@ -1,8 +1,9 @@
 # Build stage
-FROM eclipse-temurin:21-jdk-jammy as builder
+FROM gradle:8.5-jdk21 AS builder
 WORKDIR /app
-COPY . .
-RUN ./gradlew clean build -x test
+COPY build.gradle settings.gradle ./
+COPY src ./src
+RUN gradle build --no-daemon -x test
 
 # Runtime stage
 FROM eclipse-temurin:21-jre-jammy
