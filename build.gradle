@@ -2,6 +2,8 @@ plugins {
     id 'org.springframework.boot' version '3.2.0'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'java'
+    id 'jacoco'
+    id 'org.sonarqube' version '4.4.1.3373'
 }
 
 group = 'com.example'
@@ -19,4 +21,24 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // Génère automatiquement le rapport JaCoCo après les tests
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        // SonarCloud lit uniquement le format XML
+        xml.required = true
+        html.required = true
+    }
+}
+
+sonar {
+    properties {
+        property 'sonar.projectKey', 'LeP0uce_hello'
+        property 'sonar.organization', 'lepouce'
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.coverage.jacoco.xmlReportPaths', 'build/reports/jacoco/test/jacocoTestReport.xml'
+    }
 }
